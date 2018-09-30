@@ -124,7 +124,7 @@ int searchForField(char* headers[],int num_columns, const char* fieldName){
     int i=0;
     while(i < num_columns){
         if(strcmp(headers[i],fieldName) == 0){
-            printf("[SORTING %d]: %s\n",i,headers[i]);
+            // printf("[SORTING %d]: %s\n",i,headers[i]);
             return i;
         }
         i++;
@@ -162,6 +162,102 @@ void printTable(Row **table,char* headers[], int num_columns, int num_rows,int m
         printf("\n");
     }
 
+}
+
+/*
+    0 = String
+    1 = Int
+    2 = Double
+*/
+int getDataType(const char * col){
+    if(strcmp(col, "color") == 0) {
+        return 0;
+    }
+    else if(strcmp(col, "director_name") == 0) {
+        return 0;
+    }
+    else if(strcmp(col, "num_critic_for_reviews") == 0) {
+        return 1;
+    }
+    else if(strcmp(col, "duration") == 0) {
+        return 1;
+    }
+    else if(strcmp(col, "director_facebook_likes") == 0) {
+        return 1;
+    }
+    else if(strcmp(col, "actor_3_facebook_likes") == 0) {
+        return 1;
+    }
+    else if(strcmp(col, "actor_2_name") == 0) {
+        return 0;
+    }
+    else if(strcmp(col, "actor_1_facebook_likes") == 0) {
+        return 1;
+    }
+    else if(strcmp(col, "gross") == 0) {
+        return 2;
+    }
+    else if(strcmp(col, "genres") == 0) {
+        return 0;
+    }
+    else if(strcmp(col, "actor_1_name") == 0) {
+        return 0;
+    }
+    else if(strcmp(col, "movie_title") == 0) {
+        return 0;
+    }
+    else if(strcmp(col, "num_voted_users") == 0) {
+        return 1;
+    }
+    else if(strcmp(col, "cast_total_facebook_likes") == 0) {
+        return 1;
+    }
+    else if(strcmp(col, "actor_3_name") == 0) {
+        return 0;
+    }
+    else if(strcmp(col, "facenumber_in_poster") == 0) {
+        return 1;
+    }
+    else if(strcmp(col, "plot_keywords") == 0) {
+        return 0;
+    }
+    else if(strcmp(col, "movie_imdb_link") == 0) {
+        return 0;
+    }
+    else if(strcmp(col, "num_user_for_reviews") == 0) {     
+        return 1;
+    }
+    else if(strcmp(col, "language") == 0) {
+        return 0;
+    }
+    else if(strcmp(col, "country") == 0) {
+        return 0;
+    }
+    else if(strcmp(col, "content_rating") == 0) {
+        return 0;
+    }
+    else if(strcmp(col, "budget") == 0) {       
+        return 2;
+    }
+    else if(strcmp(col, "title_year") == 0) {       
+        return 1;
+    }
+    else if(strcmp(col, "actor_2_facebook_likes") == 0) {       
+        return 1;
+    }
+    else if(strcmp(col, "imdb_score") == 0) {
+        return 2;
+    }
+    else if(strcmp(col, "aspect_ratio") == 0) {
+        return 2;
+    }
+    else if(strcmp(col, "movie_facebook_likes") == 0) {     
+        return 1;
+    }
+    else{
+        // printf("Column name does not exist\n");
+        return -1;
+    }    
 }
 
 
@@ -301,10 +397,12 @@ int main(int argc, char const *argv[]){
 
     // printf("Number of rows: %d\nNumber of columns: %d\n",row_number,number_of_columns);
     const char* column_to_sort = argv[2]; 
+    int search_index = searchForField(headerarr,number_of_columns,column_to_sort);
+    int data_type = getDataType(argv[2]);
 
-    Mergesort(table,0, row_number-1,column_to_sort);
+    Mergesort(table,0, row_number-1,search_index,data_type);
 
-    // printTable(table,headerarr,number_of_columns,row_number,movieIndex);
+    printTable(table,headerarr,number_of_columns,row_number,movieIndex);
 
     
 
