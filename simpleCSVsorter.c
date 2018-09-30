@@ -311,20 +311,12 @@ int main(int argc, char const *argv[]){
         i++;
     }
 
-
-    //************ Check if input value is valid ************
-    // if (searchForField(headerarr,number_of_columns,argv[2]) == -1) {
-    //     printf("%s is not a valid column type. Please try again.\n",argv[2]);
-    //     exit(EXIT_FAILURE);
-    //     return -1;
-    // }
     
-    int p;
-    for(p=0; p<number_of_columns;p++){
-        printf("[%d]: %s\n",p,headerarr[p]);
-    }
+    // int p;
+    // for(p=0; p<number_of_columns;p++){
+    //     printf("[%d]: %s\n",p,headerarr[p]);
+    // }
 
-    printf("[Number of columns]: %d\n\nc",number_of_columns);
     int current_column=0;
     int row_number=0;
     
