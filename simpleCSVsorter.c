@@ -420,6 +420,9 @@ int main(int argc, char const *argv[]){
     int search_index = searchForField(headerarr,number_of_columns,column_to_sort);
     int data_type = getDataType(argv[2]);
 
+    /*
+        Call Mergesort on the struct with the row data
+    */
     Mergesort(table,0, row_number-1,search_index,data_type);
 
     printTable(table,headerarr,number_of_columns,row_number,movieIndex);

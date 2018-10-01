@@ -6,7 +6,18 @@
 #include <string.h>
 #include <time.h>
 
-
+/*
+Params: table - An array of string arrays that stores the csv file in the form of multiple 1d arrays
+        low - The first index in the array
+        mid - The middle point of the array
+        high - The last index in the array
+        header - the index of the column you want to sort
+        dataType - an integer that represents the type of data you want to sort
+            |__0 = string
+            |__1 = integer
+            |__2 = double
+Returns: VOID -    joins the two arrays together
+*/
 void Merge(Row** table,int low,int mid,int high, int header,int dataType){
     int mergedSize = high - low +1;
     Row **temp = (Row **)malloc(mergedSize * sizeof(Row*));
@@ -62,6 +73,17 @@ void Merge(Row** table,int low,int mid,int high, int header,int dataType){
     free(temp); 
 }
 
+/*
+Params: table - An array of string arrays that stores the csv file in the form of multiple 1d arrays
+        low - The first index in the array
+        high - The last index in the array
+        header - the index of the column you want to sort
+        dataType - an integer that represents the type of data you want to sort
+            |__0 = string
+            |__1 = integer
+            |__2 = double
+Returns: VOID - sorts the struct row given
+*/
 void Mergesort(Row** table,int low,int high, int header, int dataType){
     if(low < high){
         int mid = (low + high) / 2;
