@@ -3,6 +3,11 @@
 #define BUFFER_SIZE 1024
 // #define TABLE_SIZE 5045
 
+
+/*
+    Params: col - the column you want to search
+    Returns: Integer - returns -1 if column doesn't exist
+*/
 int validColumn(const char * col){
     if(strcmp(col, "color") == 0) {
         return 0;
