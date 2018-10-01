@@ -165,14 +165,14 @@ void printTable(Row **table,char* headers[], int num_columns, int num_rows,int m
     int k;
     for(k=0; k<num_columns;k++){
         if(k == (num_columns-1)){
-            printf("%s",headers[k]);
+            printf("%s",trim(headers[k]));
+            printf("\n");
         }
         else{
             printf("%s,",headers[k]);
         }
         
     }
-    printf("\n");
     int i,j;
     for(i=0; i < num_rows;i++){
         for(j=0; j < num_columns; j++){
@@ -373,6 +373,7 @@ int main(int argc, char const *argv[]){
     */
     while(fgets(line, BUFFER_SIZE, filepath) != NULL){
         char* temp = strdup(line);
+        temp = trim(temp);
 
         // printf("[R]:%d ==> %s\n",row_number,temp);
 
