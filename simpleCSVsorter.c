@@ -98,21 +98,23 @@ int validColumn(const char * col){
 Params: A string or a character array;
 Removes trailing an leading whitespaces
 */
-void trim(char *str) {
-	int i;
-	int begin = 0;
-	int end = strlen(str) - 1;
-	while (isspace((unsigned char) str[begin])) {
-		begin++;
-	}
-	while ((end >= begin) && isspace((unsigned char) str[end])) {
-		end--;
-	}
-	// Shift all chars back to the start of the string array
-	for (i = begin; i <= end; i++) {
-		str[i - begin] = str[i];
-	}
-	str[i - begin] = '\0'; // Null terminate string
+char *trim(char *str){
+  char *end;
+
+  // Trim leading space
+  while(isspace((unsigned char)*str)) str++;
+
+  if(*str == 0)  // All spaces?
+    return str;
+
+  // Trim trailing space
+  end = str + strlen(str) - 1;
+  while(end > str && isspace((unsigned char)*end)) end--;
+
+  // Write new null terminator character
+  end[1] = '\0';
+
+  return str;
 }
 
 /*
@@ -139,7 +141,7 @@ Returns: Integer - An interger pointing to the index of the field you are lookin
 int searchForField(char* headers[],int num_columns, const char* fieldName){
     int i=0;
     while(i < num_columns){
-        if(strcmp(headers[i],fieldName) == 0){
+        if(strcmp(trim(headers[i]),fieldName) == 0){
             // printf("[SORTING %d]: %s\n",i,headers[i]);
             return i;
         }
@@ -170,6 +172,7 @@ void printTable(Row **table,char* headers[], int num_columns, int num_rows,int m
         }
         
     }
+    printf("\n");
     int i,j;
     for(i=0; i < num_rows;i++){
         for(j=0; j < num_columns; j++){
@@ -359,7 +362,6 @@ int main(int argc, char const *argv[]){
     Row **table = malloc(TABLE_SIZE * sizeof(Row*));
 
     for (i = 0; i < TABLE_SIZE; i++) {
-		//Intiialize struct with dynamic array
 		table[i] = malloc(sizeof(Row) + number_of_columns*sizeof(char*));
     }
 
@@ -389,7 +391,7 @@ int main(int argc, char const *argv[]){
 				if(strstr(front, quote) != NULL ) {
 					temp++;
 					token = strsep(&temp, quote);
-                    trim(token);
+                    token = trim(token);
 					temp++;
 				}
 				else {
@@ -401,7 +403,7 @@ int main(int argc, char const *argv[]){
                 token = strsep(&temp,comma);
             }
 
-            trim(token);
+            token = trim(token);
             // printf("[C]:%d\n",current_column);
             table[row_number] -> columnValues[current_column] = token;
 
