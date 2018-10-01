@@ -98,23 +98,24 @@ int validColumn(const char * col){
 Params: A string or a character array;
 Removes trailing an leading whitespaces
 */
-char *trim(char *str){
-  char *end;
+char *trim(char *token){
+    char *end;
 
-  // Trim leading space
-  while(isspace((unsigned char)*str)) str++;
+    while(isspace((unsigned char)*token)) {
+        token++;
+    }
 
-  if(*str == 0)  // All spaces?
-    return str;
+    if(*token == 0){
+        return token;
+    }
 
-  // Trim trailing space
-  end = str + strlen(str) - 1;
-  while(end > str && isspace((unsigned char)*end)) end--;
+    end = token + strlen(token) - 1;
+    while(end > token && isspace((unsigned char)*end)){
+      end--;
+    }
+    end[1] = '\0';
 
-  // Write new null terminator character
-  end[1] = '\0';
-
-  return str;
+  return token;
 }
 
 /*
@@ -357,7 +358,6 @@ int main(int argc, char const *argv[]){
     movieIndex = findMovieIndex(headerarr,number_of_columns);
     // printf("[Movie Index]: %d\n",movieIndex);
 
-    //Initialize table size by allocating memory
     int TABLE_SIZE = 5044;
     Row **table = malloc(TABLE_SIZE * sizeof(Row*));
 
@@ -375,12 +375,10 @@ int main(int argc, char const *argv[]){
         char* temp = strdup(line);
         temp = trim(temp);
 
-        // printf("[R]:%d ==> %s\n",row_number,temp);
 
         //************ Reset Array Pointer back to 0 every time new row comes ************ 
         current_column = 0;
 
-        // arr = realloc(arr, (numRecords + 1) * sizeof(record));
         while(current_column < number_of_columns){
             char* quote = "\"";
             char* comma = ",";
@@ -392,7 +390,7 @@ int main(int argc, char const *argv[]){
 				if(strstr(front, quote) != NULL ) {
 					temp++;
 					token = strsep(&temp, quote);
-                    token = trim(token);
+                    // token = trim(token);
 					temp++;
 				}
 				else {
@@ -404,15 +402,9 @@ int main(int argc, char const *argv[]){
                 token = strsep(&temp,comma);
             }
 
-            token = trim(token);
-            // printf("[C]:%d\n",current_column);
+            // token = trim(token);
+
             table[row_number] -> columnValues[current_column] = token;
-
-            // table[row_number].columnValues[current_column] = malloc(strlen(token)*sizeof(char*));
-            // strcpy(table[row_number].columnValues[current_column],token);
-
-
-            // printf("[C]:%d ==> %s\n",current_column,table[row_number].columnValues[current_column]);
 
             current_column++;
 

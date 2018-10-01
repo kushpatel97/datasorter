@@ -17,7 +17,7 @@ void Merge(Row** table,int low,int mid,int high, int header,int dataType){
     while(leftPos <= mid && rightPos <= high){
         //IF STRING = 0
 	    if(dataType == 0) {
-            if (strcmp(table[leftPos] -> columnValues[header], table[rightPos] -> columnValues[header]) < 0){
+            if (strcmp(trim(table[leftPos] -> columnValues[header]),trim(table[rightPos] -> columnValues[header])) < 0){
             	temp[mergePos++] = table[leftPos++];
             }else{
             	temp[mergePos++] = table[rightPos++];
