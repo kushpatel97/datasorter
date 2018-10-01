@@ -123,6 +123,16 @@ char *trim(char *token){
   return token;
 }
 
+int countRows(FILE *fptr){
+     int i = 0;
+     char *line = (char*)malloc(sizeof(char)*3000);
+     while(fgets(line,3000,fptr)){
+         i++;
+     }
+     return i;
+
+}
+
 /*
 Params: Headers - An array of strings: stores a list of column headers
         num_colums - the number of colums in the csv file
@@ -316,9 +326,34 @@ int main(int argc, char const *argv[]){
         exit(0);
         return -1;
     }
+
+    // COUNT NUMBER OF ROWS HERE
+    char csv_line[BUFFER_SIZE];
+   
+    // //COPYING STDIN INTO A RELATIVE PATH FILE
+    FILE *fptr;
+    fptr = fopen("./duplicate.csv","w+");
+
+    int count = 0;
+    while(fgets(csv_line,BUFFER_SIZE, stdin)){
+        fprintf(fptr, "%s",csv_line);
+        count++;
+    }
+    // printf("Counter: %d\n",count);
+
+    
+    rewind(fptr);
+
+    // COUNT ROWS (SUBTRACTED ONE FROM COUNT TO GET REAL COUNT?)
+    // int count = countRows(fptr);
+
+    rewind(fptr);
+
+
+
     
 
-    FILE *filepath = stdin;
+    FILE *filepath = fopen("./duplicate.csv","r");
     char line[BUFFER_SIZE];
 
 
@@ -363,7 +398,10 @@ int main(int argc, char const *argv[]){
     movieIndex = findMovieIndex(headerarr,number_of_columns);
     // printf("[Movie Index]: %d\n",movieIndex);
 
-    int TABLE_SIZE = 5044;
+    int TABLE_SIZE = count + 10;
+
+
+
     Row **table = malloc(TABLE_SIZE * sizeof(Row*));
 
     for (i = 0; i < TABLE_SIZE; i++) {
@@ -378,6 +416,7 @@ int main(int argc, char const *argv[]){
     */
     while(fgets(line, BUFFER_SIZE, filepath) != NULL){
         char* temp = strdup(line);
+        // printf("%s\n",temp);
         temp = trim(temp);
 
 
@@ -431,4 +470,9 @@ int main(int argc, char const *argv[]){
     Mergesort(table,0, row_number-1,search_index,data_type);
 
     printTable(table,headerarr,number_of_columns,row_number,movieIndex);
+
+    for (i = 0; i < TABLE_SIZE; i++) {
+		free(table[i]);
+    }
+    free(table);
 }
