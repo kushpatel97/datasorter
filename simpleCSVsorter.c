@@ -93,6 +93,11 @@ int validColumn(const char * col){
         return -1;
     }    
 }
+
+/*
+Params: A string or a character array;
+Removes trailing an leading whitespaces
+*/
 void trim(char *str) {
 	int i;
 	int begin = 0;
@@ -110,6 +115,11 @@ void trim(char *str) {
 	str[i - begin] = '\0'; // Null terminate string
 }
 
+/*
+Params: Headers - An array of strings: stores a list of column headers
+        num_colums - the number of colums in the csv file
+Returns: Integer - An interger pointing to the index of movie titles
+*/
 int findMovieIndex(char* headers[],int num_columns){
     int i;
     for(i=0; i < num_columns; i++){
@@ -120,6 +130,12 @@ int findMovieIndex(char* headers[],int num_columns){
     return -1;
 }
 
+/*
+Params: Headers - An array of strings: stores a list of column headers
+        num_colums - the number of colums in the csv file
+        fieldName - the name of the field you are searching for
+Returns: Integer - An interger pointing to the index of the field you are looking for
+*/
 int searchForField(char* headers[],int num_columns, const char* fieldName){
     int i=0;
     while(i < num_columns){
@@ -132,6 +148,14 @@ int searchForField(char* headers[],int num_columns, const char* fieldName){
     return -1;
 }
 
+/*
+Params: table - An array of string arrays that stores the csv file in the form of multiple 1d arrays
+        Headers - An array of strings: stores a list of column headers
+        num_colums - the number of colums in the csv file
+        num_rows - the max number of rows in the the table
+        movieIndex - the index of the movie_title field to look out for quotes
+Returns: VOID - prints out the table row by row, including the quotes for the movie_title fields because they may contain commas in the titles
+*/
 void printTable(Row **table,char* headers[], int num_columns, int num_rows,int movieIndex){
     //************ "i" indicates number of rows ************    
     //************ "j" indicates number of columns ************
@@ -165,9 +189,11 @@ void printTable(Row **table,char* headers[], int num_columns, int num_rows,int m
 }
 
 /*
-    0 = String
-    1 = Int
-    2 = Double
+Params: col - A constant string paramater
+Returns: Integer - returns the following depending on the type of the string
+           |__ 0 = String
+           |__ 1 = Int
+           |__ 2 = Double
 */
 int getDataType(const char * col){
     if(strcmp(col, "color") == 0) {
@@ -262,23 +288,23 @@ int getDataType(const char * col){
 
 
 int main(int argc, char const *argv[]){
-    int columnIndex;
 
     if(stdin == NULL){
-        printf("Invalid format:\ncat input.file | ./sorter -c  \"movie_title\"\n");
-        exit(EXIT_FAILURE);
+        fprintf(stderr,"Invalid format:\ncat input.file | ./sorter -c  \"movie_title\"\n");
+        exit(0);
+        return -1;
     }
 
     // Make sure there are a correct number of arguments
     if ( argc != 3 || strcmp(argv[1],"-c") != 0) {
-        printf("Invalid format:\ncat input.file | ./sorter -c  \"movie_title\"\n");
-        exit(EXIT_FAILURE);
+        fprintf(stderr,"Invalid format:\ncat input.file | ./sorter -c  \"movie_title\"\n");
+        exit(0);
         return -1;
     }
 
     if (validColumn(argv[2]) == -1) {
-        printf("%s is not a valid column type. Please try again.\n",argv[2]);
-        exit(EXIT_FAILURE);
+        fprintf(stderr,"%s is not a valid column type. Please try again.\n",argv[2]);
+        exit(0);
         return -1;
     }
     
@@ -293,7 +319,10 @@ int main(int argc, char const *argv[]){
     char *headerToken;
     int number_of_columns = 0;
     
-    //************ Find Number of columns ************
+    /*
+    Find the number of columns in the csv file by splitting the csv headers by commas
+    and store them in the number_of_columns variable
+    */
     headerToken = strtok(line, ",");
     while(headerToken != NULL ) {
         // printf("%s\n", headerToken );
@@ -302,7 +331,9 @@ int main(int argc, char const *argv[]){
         number_of_columns++;
     }
     
-    //************ Create header array to store column values ************
+    /*
+        Create an array of strings and store the csv file headers in there
+    */
     char* headerarr[number_of_columns];
     int i=0;
     while(i< number_of_columns){
@@ -311,12 +342,10 @@ int main(int argc, char const *argv[]){
         i++;
     }
 
-    
-    // int p;
-    // for(p=0; p<number_of_columns;p++){
-    //     printf("[%d]: %s\n",p,headerarr[p]);
-    // }
-
+    /*
+        current_column - an int variable used to keep track of the current column
+        row_number - an int variable to keep track of the current row in the table array
+    */
     int current_column=0;
     int row_number=0;
     
@@ -325,7 +354,7 @@ int main(int argc, char const *argv[]){
     movieIndex = findMovieIndex(headerarr,number_of_columns);
     // printf("[Movie Index]: %d\n",movieIndex);
 
-    //Initialize table
+    //Initialize table size by allocating memory
     int TABLE_SIZE = 5044;
     Row **table = malloc(TABLE_SIZE * sizeof(Row*));
 
@@ -336,7 +365,10 @@ int main(int argc, char const *argv[]){
 
 
 
-
+    /*
+        Starting with the first line of the file, read the file line by line
+        
+    */
     while(fgets(line, BUFFER_SIZE, filepath) != NULL){
         char* temp = strdup(line);
 
@@ -357,6 +389,7 @@ int main(int argc, char const *argv[]){
 				if(strstr(front, quote) != NULL ) {
 					temp++;
 					token = strsep(&temp, quote);
+                    trim(token);
 					temp++;
 				}
 				else {
@@ -395,10 +428,4 @@ int main(int argc, char const *argv[]){
     Mergesort(table,0, row_number-1,search_index,data_type);
 
     printTable(table,headerarr,number_of_columns,row_number,movieIndex);
-
-    
-
-    
-
-    
 }
